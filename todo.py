@@ -1,13 +1,13 @@
-from os import system, name
+import os
 from task import Task
 
 def clearConsole():
-    if name == 'nt': 
-        _ = system('cls') 
+    if os.name == 'nt': 
+        _ = os.system('cls') 
   
     # for mac and linux(here, os.name is 'posix') 
     else: 
-        _ = system('clear')
+        _ = os.system('clear')
 
 
 def stringToInt(x):
@@ -21,9 +21,21 @@ def stringToInt(x):
 class Todo:
 
     tasks = []
+    url = ''
 
-    def __init__(self) -> None:
+
+    def __init__(self):
+        self.setTodo()
         pass
+
+
+    def setTodo(self):
+        Todo.url = os.getcwd()
+        file = None
+        if(not os.path.isfile(Todo.url)):
+            file = open('todo.txt', 'x')
+        else:
+            file = open('todo.txt', 'r')
 
 
     def addTask(self):
@@ -126,5 +138,7 @@ class Todo:
                 print('ERROR: COMMAND INVALID')
 
 
+print('' + os.getcwd())
+
 myTodo = Todo()
-myTodo.run()
+#myTodo.run()
