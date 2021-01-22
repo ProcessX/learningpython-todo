@@ -5,7 +5,6 @@ def clearConsole():
     if os.name == 'nt': 
         _ = os.system('cls') 
   
-    # for mac and linux(here, os.name is 'posix') 
     else: 
         _ = os.system('clear')
 
@@ -22,20 +21,41 @@ class Todo:
 
     tasks = []
     url = ''
+    separator = '###'
 
 
     def __init__(self):
-        self.setTodo()
+        self.setFile()
+        self.run()
         pass
 
 
-    def setTodo(self):
+    def setFile(self):
         Todo.url = os.getcwd()
         file = None
-        if(not os.path.isfile(Todo.url)):
+        if(not os.path.isfile(Todo.url + '/todo.txt')):
             file = open('todo.txt', 'x')
+            file.closed
         else:
-            file = open('todo.txt', 'r')
+            self.setTodo()
+    
+
+    def setTodo(self):
+        file = open('todo.txt', 'r')
+        todo = file.readlines()
+        for task in todo:
+            taskInfo = task.replace('\n', '').split('###')
+            print(taskInfo)
+            newTask = Task(taskInfo[0])
+            newTask.done = True if taskInfo[1] == 'True' else False
+            Todo.tasks.append(newTask)
+        file.close()
+
+
+    def save(self):
+        file = open('todo.txt', 'w')
+        for task in Todo.tasks:
+            file.write(task.title + '###' + str(task.done) + '\n')
 
 
     def addTask(self):
@@ -121,9 +141,9 @@ class Todo:
         self.updateInterface()
 
         while(True):
-            #print('\nCOMMANDS\na: add task | r: remove task | c: check/uncheck task | q: quit program\n')
             userImput = input('Your action? ')
             if(userImput == 'q'):
+                self.save()
                 break
             elif(userImput == 'a'):
                 self.addTask()
@@ -138,7 +158,4 @@ class Todo:
                 print('ERROR: COMMAND INVALID')
 
 
-print('' + os.getcwd())
-
 myTodo = Todo()
-#myTodo.run()
