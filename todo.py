@@ -1,23 +1,8 @@
-import os
 from task import Task
-
-def clearConsole():
-    if os.name == 'nt': 
-        _ = os.system('cls') 
-  
-    else: 
-        _ = os.system('clear')
-
-
-def stringToInt(x):
-    try:
-        x = int(x)
-        return x
-    except ValueError:
-        return 'Error'
         
 
 class Todo:
+    'List of tasks to do'
 
     tasks = []
     url = ''
