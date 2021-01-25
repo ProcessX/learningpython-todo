@@ -3,30 +3,31 @@ from command import Command
 class Interface:
     'Base for the user interface'
 
-    cmd = []
+    commands = []
     running = False
 
     def __init__(self):
-        self.cmd = {'cmd': self.displayCmd}
+        Interface.commands.append(Command('cmd', self.displayCmd, 'Display command list'))
+        Interface.commands.append(Command('q', self.quit, 'Quit'))
         self.run()
 
 
     def runCmd(self, input):
         # Run the command if it exists, otherwise call for an error message.
         # @param input : command's shortcut
-        cmdFunction = self.cmd.get(input, False)
-        if(cmdFunction == False):
-            print('Cmd not found')
-        else:
-            cmdFunction()
+        for cmd in Interface.commands:
+            if(cmd.shortcut == input):
+                cmd.effect()
+                return
+        print('ERROR : Cmd not found')
 
     
     def displayCmd(self):
         #Display a list of every command available at the time.
-        print(self.cmd)
         cmdList = ''
-        for cmd in self.cmd.items():
-            cmdList += f'{cmd[0]}: {cmd[1]}, '
+        for cmd in Interface.commands:
+            cmdList += f'{cmd.shortcut}: {cmd.description}, '
+        cmdList = cmdList.rstrip(', ')
         print(cmdList)
 
     
@@ -36,12 +37,12 @@ class Interface:
 
     
     def quit(self):
-        self.running = False
+        Interface.running = False
 
 
     def run(self):
-        self.running = True
-        while(self.running):
+        Interface.running = True
+        while(Interface.running):
             userInput = input('Votre action? ')
             self.runCmd(userInput)
 
